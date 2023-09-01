@@ -19,9 +19,6 @@ python main.py NUMBER
 ### help
 ```bash
 python main.py -h
- 
- 
-python main.py -h
 
 888b     d888          888      d8b 888                .d88888b.   .d8888b. 8888888 888b    888 88888888888 
 8888b   d8888          888      Y8P 888               d88P" "Y88b d88P  Y88b  888   8888b   888     888     
