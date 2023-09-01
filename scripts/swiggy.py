@@ -8,7 +8,6 @@ def check_swiggy(num):
     response = requests.post(burp0_url, headers=burp0_headers, cookies=burp0_cookies, json=burp0_json)
 
     jsonData= response.json()
-
     if(jsonData['statusMessage']=="Mobile number already exists"):
         print("Swiggy : True")
     else:
