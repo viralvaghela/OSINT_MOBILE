@@ -1,6 +1,6 @@
 # OSINT_MOBILE
 Check given number is registered on sites like  Swiggy, Flipkart, etc...
-
+🚀 This tool streamlines the process of tracking digital footprints 👣, giving law enforcement the upper hand in the fight against cybercrime 💻 and fortifying online security. 🔒
 ### Screenshots
 ![Screenshot](screenshots/menu.png)
 
