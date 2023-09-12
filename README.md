@@ -1,6 +1,6 @@
 # OSINT_MOBILE
 Check given number is registered on sites like  Swiggy, Flipkart, etc...
-
+🚀 This tool streamlines the process of tracking digital footprints 👣, giving law enforcement the upper hand in the fight against cybercrime 💻 and fortifying online security. 🔒
 ### Screenshots
 ![Screenshot](screenshots/menu.png)
 
@@ -18,9 +18,6 @@ python main.py NUMBER
 
 ### help
 ```bash
-python main.py -h
- 
- 
 python main.py -h
 
 888b     d888          888      d8b 888                .d88888b.   .d8888b. 8888888 888b    888 88888888888 
