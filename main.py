@@ -1,9 +1,7 @@
 import argparse
-from scripts.swiggy import check_swiggy
-from scripts.flipkart import check_flipkart
-from scripts.upstox import check_upstox
+from tools.num_scripts import * 
 
-# Define your ASCII banner
+
 banner = """
 888b     d888          888      d8b 888                .d88888b.   .d8888b. 8888888 888b    888 88888888888 
 8888b   d8888          888      Y8P 888               d88P" "Y88b d88P  Y88b  888   8888b   888     888     
@@ -16,7 +14,7 @@ banner = """
                                                                                                             
                                                                                                             
                                                                                                             
-@ViralVaghela https://github.com/viralvaghela/OSINT_MOBILE
+https://github.com/viralvaghela/OSINT_MOBILE @ViralVaghela
 """
 
 # Create a dictionary to map service names to functions
@@ -24,6 +22,8 @@ services = {
     "swiggy": check_swiggy,
     "flipkart": check_flipkart,
     "upstox": check_upstox,
+    "instagram": check_instagram,
+    "snapdeal": check_snapdeal
 }
 
 def main():
