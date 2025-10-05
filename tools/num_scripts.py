@@ -80,3 +80,166 @@ def check_upstox(num):
         print("Upstox : True")
     else:
         print("Upstox : False")
+
+import requests
+
+def check_makemytrip(num):
+    # normalize input to last 10 digits (handles inputs like "9876543210", "+919876543210", "919876543210")
+    digits = ''.join(filter(str.isdigit, str(num)))
+    if len(digits) >= 10:
+        login = digits[-10:]
+    else:
+        login = digits  # whatever user provided; request may fail or return unregistered
+
+    burp0_url = "https://mapi.makemytrip.com/ext/web/pwa/isUserRegistered?region=in&language=eng&currency=inr"
+    burp0_headers = {
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Content-Type": "application/json",
+        "language": "eng",
+        'sec-ch-ua-platform': '"Android"',
+        "authorization": "h4nhc9jcgpAGIjp",
+        "usr-mcid": "6ba36df2-7899-4e57-bc0b-0df041da3a2f",
+        'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        "sec-ch-ua-mobile": "?1",
+        "deviceid": "6ba36df2-7899-4e57-bc0b-0df041da3a2f",
+        "vid": "6ba36df2-7899-4e57-bc0b-0df041da3a2f",
+        "tid": "6ba36df2-7899-4e57-bc0b-0df041da3a2f",
+        "user-identifier": '{"ipAddress":"ipAddress","imie":"imie","appVersion":"2.0.0","deviceId":"6ba36df2-7899-4e57-bc0b-0df041da3a2f","os":"PWA","osVersion":"osVersion","timeZone":"timeZone","type":"mmt-auth","value":null,"deviceOrBrowserInfo":"Chrome"}',
+        "entity-name": "india",
+        "user-country": "IN",
+        "currency": "inr",
+        "visitor-id": "6ba36df2-7899-4e57-bc0b-0df041da3a2f",
+        "user-currency": "INR",
+        "dnt": "1",
+        "region": "in",
+        "origin": "https://www.makemytrip.com",
+        "sec-fetch-site": "same-site",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": "https://www.makemytrip.com/",
+        "accept-language": "en,hi;q=0.9",
+        "priority": "u=1, i",
+        # Cookie header is large in the original curl. You can include a minimal cookie header or omit it.
+        "Cookie": "_adserveruser_ad_id=null; isGdprRegion=0; ad=1759295950831; lang=eng; ccde=IN; GL=true; isWW=0; userCurrency=INR; dvid=6ba36df2-7899-4e57-bc0b-0df041da3a2f; pwaVer=3; referrer=%7B%22referer%22%3A%22https%3A%2F%2Fwww.google.com%2F%22%7D; bm_ss=ab8e18ef4e; bm_so=E4ED4AA6F02DEE82708D48E3F88DCC3EBD0EB0CE5C9CBF8596856BA0DB1E06BEYAAQX3IsMVkIK5iZAQAA29A1nh3Z4vytHZqIH1L7LGiTgUV1uTzGUnPaiTL4Sr/pRkZ8bwJhnObmu60jqcFg1Y8SGjln8Hl85irahdAxzMBLXhsBZJ+ipGxbxgHQZ06NiH6hW1RBYSHvsn6QBK3JteS8GFACEyndvwNuJULl/Ope0Wc1Czzn3iQutgWaSsvPzpSvlxK0VjUqo44Os/UiaMsNTUf3uLDrFM4vpN4Ii9RtU5u1PnR3Zw+mnGisuRt4skKcpJvP99JhztOYDFXeySPz5zlh0+9HvOS+kL1wlEGVeJAnm13XZBcGXcpzVmjKgwZyUqc5D5zii9/HLRCLb75/jI2MOrVTvnGkPrO13fP2azY/0+VgPO/vyqGvcpwcQFm4YXRrLVHFnrSJOMutzFDLgtpcWZ2nyQXPMxuiZYIdYohiqVyyqtxYF6c=4604729; ak_bmsc=F17D5F23DE48CE1493BD3388B9FE7663YAAQX3IsMZkIK5iZAQAAGdI1nh2+2vP+g9hHK7Xult97kbZOhvrZbF19VzxFlg0GfgkEMpO7BtSZPc3D+EeuONSL8ouVOxGw6WVGzgExvr9De6Y"
+    }
+
+    burp0_json = {
+        "loginId": login,
+        "type": "MOBILE",
+        "version": 2,
+        "countryCode": "91"
+    }
+
+    try:
+        res = requests.post(burp0_url, headers=burp0_headers, json=burp0_json, timeout=15)
+        res.raise_for_status()
+    except requests.RequestException as e:
+        print(f"MakeMyTrip : Error ({e})")
+        return
+
+    try:
+        jsonData = res.json()
+    except ValueError:
+        print("MakeMyTrip : Error (invalid JSON response)")
+        return
+
+    # expected response shape (from your example):
+    # {"success":true,"message":"SUCCESS","data":{"registered":false, ...}}
+    registered = None
+    if isinstance(jsonData, dict):
+        # try common locations
+        if 'data' in jsonData and isinstance(jsonData['data'], dict):
+            registered = jsonData['data'].get('registered')
+        else:
+            # fallback if top-level key exists
+            registered = jsonData.get('registered')
+
+    if registered is True:
+        print("MakeMyTrip : True")
+    elif registered is False:
+        print("MakeMyTrip : False")
+    else:
+        # unknown / unexpected format — print full json for debugging
+        print("MakeMyTrip : Unknown response format")
+        print(jsonData)
+import requests
+
+def check_lenskart(num):
+    # Normalize input (handles +91 / 91 / plain 10-digit)
+    digits = ''.join(filter(str.isdigit, str(num)))
+    telephone = digits[-10:] if len(digits) >= 10 else digits
+
+    url = "https://api-gateway.juno.lenskart.com/v3/customers/sendOtp"
+    headers = {
+        "Content-Type": "application/json",
+        "x-session-token": "ea621b0a-a956-45fb-941b-3ae6da744056",
+        "x-api-client": "mobilesite",
+        "Origin": "https://www.lenskart.com",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+    data = {
+        "captcha": None,
+        "phoneCode": "+91",
+        "telephone": telephone
+    }
+
+    try:
+        res = requests.post(url, headers=headers, json=data, timeout=10)
+        res.raise_for_status()
+        json_data = res.json()
+    except Exception as e:
+        print(f"Lenskart : Error ({e})")
+        return
+
+    # Check if number exists (isNewUser == False → registered)
+    try:
+        is_new = json_data["result"]["isNewUser"]
+        if is_new is False:
+            print("Lenskart : True")   # number exists
+        elif is_new is True:
+            print("Lenskart : False")  # not registered
+        else:
+            print("Lenskart : Unknown")
+    except KeyError:
+        print("Lenskart : Invalid response")
+
+import requests
+
+def check_bewakoof(num):
+    # Normalize to last 10 digits
+    digits = ''.join(filter(str.isdigit, str(num)))
+    mobile = digits[-10:] if len(digits) >= 10 else digits
+
+    url = "https://api-prod.bewakoof.com/v3/user/auth/login/otp"
+    headers = {
+        "Content-Type": "application/json",
+        "api-token": "NGNlNTUwYTc0MjBjYzQzZTdiZTNhMmY1NjNhMThhOGU6OGI1NThkZDgtOGQ5ZS00OWYxLTk4MDAtNzYxMGEzOGNjYzNk",
+        "Cookie": "polaris_session=68dcac235fd84c42c2d6acc1",
+        "User-Agent": "Mozilla/5.0"
+    }
+    data = {
+        "mobile": mobile,
+        "country_code": "+91"
+    }
+
+    try:
+        res = requests.post(url, headers=headers, json=data, timeout=10)
+        res.raise_for_status()
+        json_data = res.json()
+    except Exception as e:
+        print(f"Bewakoof : Error ({e})")
+        return
+
+    # Check if number exists (is_new_customer == False → registered)
+    try:
+        is_new = json_data.get("is_new_customer")
+        if is_new is False:
+            print("Bewakoof : True")   # number exists
+        elif is_new is True:
+            print("Bewakoof : False")  # not registered
+        else:
+            print("Bewakoof : Unknown")
+    except KeyError:
+        print("Bewakoof : Invalid response")

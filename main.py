@@ -23,7 +23,10 @@ services = {
     "flipkart": check_flipkart,
     "upstox": check_upstox,
     "instagram": check_instagram,
-    "snapdeal": check_snapdeal
+    "snapdeal": check_snapdeal,
+    "makemytrip":check_makemytrip ,
+    "lenskart" : check_lenskart,
+    "bewakoof":check_bewakoof
 }
 
 def main():
